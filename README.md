@@ -181,8 +181,6 @@ If you have any questions, please contact me:
 - togelbian@gmail.com (main)
 - esakak@mail.ustc.edu.cn (alternative)
 
----
-
 ## License
 
 This work is licensed under MIT license. See the [LICENSE](https://github.com/Luciennnnnnn/DualFormer/blob/main/LICENSE) for details.
