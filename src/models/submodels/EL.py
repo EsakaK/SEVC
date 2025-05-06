@@ -207,8 +207,6 @@ class EL(CompressionModel):
 
         B, _, H, W = x.size()
         pixel_num = H * W
-        mse = self.mse(x, x_hat)
-        mse = torch.sum(mse, dim=(1, 2, 3)) / pixel_num
 
         y_for_bit = y_q
         bits_y = self.get_y_laplace_bits(y_for_bit, scales_hat)
@@ -217,7 +215,6 @@ class EL(CompressionModel):
 
         bpp = bpp_y
         bit = torch.sum(bpp) * pixel_num
-        bit_y = torch.sum(bpp_y) * pixel_num
 
         # storage multi-frame latent
         ref_ys = shift_and_add(dpb['ref_ys'], y_hat)

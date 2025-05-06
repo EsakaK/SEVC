@@ -141,7 +141,7 @@ def run_test(p_frame_net, i_frame_net, args):
             psnrs.append(psnr)
             msssims.append(msssim)
 
-    print('sequence name:', args['video_path'], '    q:', args['rate_idx  Finished'])
+    print('sequence name:', args['video_path'], '    q:', args['rate_idx'], 'Finished')
 
     test_time = {}
     test_time['test_time'] = time.time() - start_time

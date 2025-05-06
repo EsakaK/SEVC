@@ -102,9 +102,6 @@ class IntraNoAR(CompressionModel):
         self.q_basic_dec = nn.Parameter(torch.ones((1, 128, 1, 1)))
         self.q_scale_dec = nn.Parameter(torch.ones((anchor_num, 1, 1, 1)))
         self.q_scale_dec_fine = None
-        self.anchor_num = anchor_num
-        self._initialize_weights()
-
     def get_q_for_inference(self, q_in_ckpt, q_index):
         q_scale_enc = self.q_scale_enc[:, 0, 0, 0] if q_in_ckpt else self.q_scale_enc_fine
         curr_q_enc = self.get_curr_q(q_scale_enc, self.q_basic_enc, q_index=q_index)
@@ -112,41 +109,8 @@ class IntraNoAR(CompressionModel):
         curr_q_dec = self.get_curr_q(q_scale_dec, self.q_basic_dec, q_index=q_index)
         return curr_q_enc, curr_q_dec
 
-    # def get_curr_q(self, q_scale):
-    #     q_basic = LowerBound.apply(self.q_basic, 0.5)
-    #     return q_basic * q_scale
-
-    def forward(self, x, q_in_ckpt=False, q_index=None, low_high_rate=0):
-        need_extension = False
-        anchor_num = self.anchor_num
-        if low_high_rate > 0:
-            anchor_num = anchor_num // 2
-        if q_index is None:
-            need_extension = True
-            q_basic_enc = self.q_basic_enc
-            q_basic_dec = self.q_basic_dec
-            if low_high_rate == 0:
-                q_scale_enc = self.q_scale_enc
-                q_scale_dec = self.q_scale_dec
-            elif low_high_rate == 1:
-                q_scale_enc = self.q_scale_enc[:anchor_num, :, :, :]
-                q_scale_dec = self.q_scale_dec[:anchor_num, :, :, :]
-            else:
-                assert low_high_rate == 2
-                q_scale_enc = self.q_scale_enc[anchor_num:, :, :, :]
-                q_scale_dec = self.q_scale_dec[anchor_num:, :, :, :]
-            B, _, _, _ = x.size()
-            q_basic_enc = q_basic_enc.repeat(B * anchor_num, 1, 1, 1)
-            q_basic_dec = q_basic_dec.repeat(B * anchor_num, 1, 1, 1)
-            q_scale_enc = q_scale_enc.repeat_interleave(B, dim=0)
-            q_scale_dec = q_scale_dec.repeat_interleave(B, dim=0)
-            curr_q_enc = q_basic_enc * q_scale_enc
-            curr_q_dec = q_basic_dec * q_scale_dec
-        else:
-            curr_q_enc, curr_q_dec = self.get_q_for_inference(q_in_ckpt, q_index)
-        if need_extension:
-            x = x.repeat(anchor_num, 1, 1, 1)
-            # y = y.repeat(anchor_num, 1, 1, 1)
+    def forward(self, x, q_in_ckpt=False, q_index=None):
+        curr_q_enc, curr_q_dec = self.get_q_for_inference(q_in_ckpt, q_index)
         y = self.enc(x, curr_q_enc)
         y_pad, slice_shape = self.pad_for_y(y)
         z = self.hyper_enc(y_pad)
@@ -166,26 +130,17 @@ class IntraNoAR(CompressionModel):
         z_for_bit = z_hat
         bits_y = self.get_y_gaussian_bits(y_for_bit, scales_hat)
         bits_z = self.get_z_bits(z_for_bit, self.bit_estimator_z)
-        mse = self.mse(x, x_hat)
-        ssim = self.ssim(x, x_hat)
 
         B, _, H, W = x.size()
         pixel_num = H * W
         bpp_y = torch.sum(bits_y, dim=(1, 2, 3)) / pixel_num
         bpp_z = torch.sum(bits_z, dim=(1, 2, 3)) / pixel_num
-        mse = torch.sum(mse, dim=(1, 2, 3)) / pixel_num
 
         bits = torch.sum(bpp_y + bpp_z) * pixel_num
-        bpp = bpp_y + bpp_z
 
         return {
             "x_hat": x_hat,
-            "mse": mse,
-            "ssim": ssim,
             "bit": bits,
-            "bpp": bpp,
-            "bpp_y": bpp_y,
-            "bpp_z": bpp_z,
         }
 
     @staticmethod

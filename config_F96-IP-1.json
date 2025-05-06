@@ -2,7 +2,7 @@
     "root_path": "/data/EsakaK/png_bmk/bt601",
     "test_classes": {
         "HEVC_B": {
-            "test": 0,
+            "test": 1,
             "base_path": "HEVC_B",
             "src_type": "png",
             "sequences": {
@@ -14,7 +14,7 @@
             }
         },
         "HEVC_C": {
-            "test": 0,
+            "test": 1,
             "base_path": "HEVC_C",
             "src_type": "png",
             "sequences": {
@@ -36,7 +36,7 @@
             }
         },
         "HEVC_E": {
-            "test": 0,
+            "test": 1,
             "base_path": "HEVC_E",
             "src_type": "png",
             "sequences": {
