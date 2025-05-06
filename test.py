@@ -34,7 +34,6 @@ def parse_args():
     parser.add_argument("--worker", "-w", type=int, default=1, help="worker number")
     parser.add_argument("--cuda", type=str2bool, nargs='?', const=True, default=False)
     parser.add_argument('--output_path', type=str, required=True)
-    # ----------------ADD-------------------
     parser.add_argument('--ratio', type=float, default=4.0)
     parser.add_argument('--refresh_interval', type=int, default=32)
 
