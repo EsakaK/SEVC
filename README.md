@@ -1,10 +1,10 @@
 <div align="center">
 
-## Augmented Deep Contexts for Spatially Embedded Video Coding [CVPR 2025]
+# Augmented Deep Contexts for Spatially Embedded Video Coding [CVPR 2025]
 
 Yifan Bian, Chuanbo Tang, Li Li, Dong Liu
 
-[[`Arxiv`](https://arxiv.org/abs/2307.12027)] [[`BibTeX`](#citation)] 
+[[`Arxiv`](https://arxiv.org/abs/2307.12027)] [[`BibTeX`](#Citation)] 
 
 [![python](https://img.shields.io/badge/Python-3.8-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-380/)[![pytorch](https://img.shields.io/badge/PyTorch-1.12-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/)[![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](#license)
 
@@ -12,7 +12,7 @@ Yifan Bian, Chuanbo Tang, Li Li, Dong Liu
 
 ---
 
-### 📌Overview
+## 📌Overview
 
 Our **S**patially **E**mbedded **V**ideo **C**odec (**SEVC**) significantly advances the performance of Neural Video Codecs (NVCs). Furthermore, SEVC posses enhanced robustness for special video sequences while offering additional functionality.
 
@@ -20,40 +20,46 @@ Our **S**patially **E**mbedded **V**ideo **C**odec (**SEVC**) significantly adva
 - **Emerging Objects**: Equipped with spatial references, SEVC can better handle sequences with emerging objects in low-delay scenes. 
 - **Fast Decoding**: SEVC provides a fast decoding mode to reconstruct a low-resolution video. 
 
-### :loudspeaker: News
+## :loudspeaker: News
 
 * \[2025/04/05\]:  Our paper is selected as a **highlight** paper [**13.5%**].
 
 ---
 
-### :bar_chart: Experimental Results
+## :bar_chart: Experimental Results
 
 ### Main Results
-
 Results comparison (BD-Rate and RD curve) for PSNR. The Intra Period is –1 with 96 frames. The anchor is VTM-13.2 LDB
+<div align="center">
 
 |                                                              |   HEVC_B    |   MCL-JCV   |     UVG     |   USTC-TD   |
 | :----------------------------------------------------------: | :---------: | :---------: | :---------: | :---------: |
 | [DCVC-HEM](https://dl.acm.org/doi/abs/10.1145/3503161.3547845) |    10.0     |     4.9     |     1.2     |    27.2     |
-| [DCVC-DC](https://openaccess.thecvf.com/content/CVPR2023/papers/Li_Neural_Video_Compression_With_Diverse_Contexts_CVPR_2023_paper.pdf) |   $-$10.8   |   $-$13.0   |   $-$21.2   |    11.9     |
-| [DCVC-FM](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Neural_Video_Compression_with_Feature_Modulation_CVPR_2024_paper.pdf) |   $-$11.7   |   $-$12.5   |   $-$24.3   |    23.9     |
-|                       **SEVC (ours)**                        | **$-$17.5** | **$-$27.7** | **$-$33.2** | **$-$12.5** |
+| [DCVC-DC](https://openaccess.thecvf.com/content/CVPR2023/papers/Li_Neural_Video_Compression_With_Diverse_Contexts_CVPR_2023_paper.pdf) |   -10.8   |   -13.0   |   -21.2   |    11.9     |
+| [DCVC-FM](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Neural_Video_Compression_with_Feature_Modulation_CVPR_2024_paper.pdf) |   -11.7   |   -12.5   |   -24.3   |    23.9     |
+|                       **SEVC (ours)**                        | **-17.5** | **-27.7** | **-33.2** | **-12.5** |
+<img src="./assets/rd.png" alt="visualization" width="900"/>
+</div>
 
-<img src="./assets/rd.png" alt="visualization" style="zoom:50%;"/>
 
 ### Visualizations
 
-- Our SEVC can get better reconstructed MVs on the decoder side in large motion sequences. 
+- Our SEVC can get better reconstructed MVs on the decoder side in large motion sequences. Here we choose [RAFT](https://arxiv.org/pdf/2003.12039) as the pseudo motion label.
 
-<img src="./assets/motion_compare.png" alt="visualization" style="zoom:20%;"/>
+<div align="center">
+<img src="./assets/motion_compare.png" alt="visualization" width="600"/>
+</div>
 
 - Spatial references augment the context for frame coding. For those emeging objects, which do not appear in previous frames, SEVC gives a better description in deep contexts.
 
-<img src="./assets/visualization.png" alt="visualization" style="zoom:30%;"/>
+<div align="center">
+<img src="./assets/visualization.png" alt="visualization" width="900""/>
+</div>
+
 
 ---
 
-### Installation
+## Installation
 
 This implementation of SEVC is based on [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC) and [CompressAI](https://github.com/InterDigitalInc/CompressAI), please refer to them for more information.
 
@@ -73,9 +79,9 @@ pip install pytorch_ssim scipy matplotlib tqdm bd-metric pillow pybind11
 <details>
   <summary><font size="5">2. Prepare test datasets</font></summary><br>
 
-For testing the RGB sequences, we use [FFmpeg]](https://github.com/FFmpeg/FFmpeg) to convert original YUV 420 data to RGB data.
+For testing the RGB sequences, we use [FFmpeg](https://github.com/FFmpeg/FFmpeg) to convert the original YUV 420 data to RGB data.
 
-A recommended structure of dataset is like:
+A recommended structure of the test dataset is like:
 
 ```
 test_datasets/
@@ -102,7 +108,7 @@ test_datasets/
 <details>
   <summary><font size="5">3. Compile the arithmetic coder</font></summary><br>
 
-If you need real bitstream writing, please compile the arithmetic coder through the following commands.
+If you need real bitstream writing, please compile the arithmetic coder using the following commands.
 
 > On Windows
 
@@ -131,12 +137,12 @@ make -j
 
 ---
 
-### :rocket: Usage
+## :rocket: Usage
 
 <details>
   <summary><font size="5">1. Evaluation</font></summary><br>
 
-Run the following command to evaluate the model and generate a json file which contains test results. 
+Run the following command to evaluate the model and generate a JSON file that contains test results. 
 
 ```shell
 python test.py --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar --rate_num 4 --test_config ./config_F96-IP-1.json --cuda 1 --worker 1 --output_path output.json
@@ -145,7 +151,7 @@ python test.py --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model
 - We use the same Intra model as DCVC-DC. `I_frame_model.pth.tar` can be downloaded from [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
 - Our `P_frame_model.pth.tar` can be downloaded from [xxx](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
 
-Put the model weights into `./ckpt`  directory and run the above command.
+Put the model weights into the `./ckpt`  directory and run the above command.
 
 Our model supports variable bitrate. Set different `i_frame_q_indexes`  and `p_frame_q_indexes` to evaluate different bitrates.
 
@@ -164,7 +170,7 @@ If you want
 
 ---
 
-### :book: Citation
+## :book: Citation
 
 **If this repo helped you, a ⭐ star or citation would make my day!**
 
@@ -178,7 +184,7 @@ If you want
 }
 ```
 
-### :email: Contact
+## :email: Contact
 
 If you have any questions, please contact me: 
 
@@ -187,10 +193,10 @@ If you have any questions, please contact me:
 
 ---
 
-### License
+## License
 
 This work is licensed under MIT license. See the [LICENSE](https://github.com/Luciennnnnnn/DualFormer/blob/main/LICENSE) for details.
 
-### Acknowledgement
+## Acknowledgement
 
 Our work is implemented based on [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC) and [CompressAI](https://github.com/InterDigitalInc/CompressAI).
