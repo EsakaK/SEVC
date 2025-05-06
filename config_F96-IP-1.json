@@ -46,7 +46,7 @@
             }
         },
         "USTC-TD": {
-            "test": 0,
+            "test": 1,
             "base_path": "USTC-TD",
             "src_type": "png",
             "sequences": {
@@ -63,7 +63,7 @@
             }
         },
         "MCL-JCV": {
-            "test": 0,
+            "test": 1,
             "base_path": "MCL-JCV",
             "src_type": "png",
             "sequences": {
@@ -100,7 +100,7 @@
             }
         },
         "UVG": {
-            "test": 0,
+            "test": 1,
             "base_path": "UVG",
             "src_type": "png",
             "sequences": {
