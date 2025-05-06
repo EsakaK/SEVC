@@ -1,164 +1,196 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+<div align="center">
 
-# C extensions
-.results
-*.pth
-.idea
-*.cfg
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+## Augmented Deep Contexts for Spatially Embedded Video Coding [CVPR 2025]
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+Yifan Bian, Chuanbo Tang, Li Li, Dong Liu
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+[[`Arxiv`](https://arxiv.org/abs/2307.12027)] [[`BibTeX`](#citation)] 
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
+[![python](https://img.shields.io/badge/Python-3.8-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-380/)[![pytorch](https://img.shields.io/badge/PyTorch-1.12-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/)[![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](#license)
 
-# Translations
-*.mo
-*.pot
+</div>
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+---
 
-# Flask stuff:
-instance/
-.webassets-cache
+### 📌Overview
 
-# Scrapy stuff:
-.scrapy
+Our **S**patially **E**mbedded **V**ideo **C**odec (**SEVC**) significantly advances the performance of Neural Video Codecs (NVCs). Furthermore, SEVC posses enhanced robustness for special video sequences while offering additional functionality.
 
-# Sphinx documentation
-docs/_build/
+- **Large Motions**: SEVC can better handle sequences with large motions through a progressive motion augmentation. 
+- **Emerging Objects**: Equipped with spatial references, SEVC can better handle sequences with emerging objects in low-delay scenes. 
+- **Fast Decoding**: SEVC provides a fast decoding mode to reconstruct a low-resolution video. 
 
-# PyBuilder
-.pybuilder/
-target/
+### :loudspeaker: News
 
-# Jupyter Notebook
-.ipynb_checkpoints
+* \[2025/04/05\]:  Our paper is selected as a **highlight** paper [**13.5%**].
 
-# IPython
-profile_default/
-ipython_config.py
+---
 
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
+### :bar_chart: Experimental Results
 
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
+### Main Results
 
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
+Results comparison (BD-Rate and RD curve) for PSNR. The Intra Period is –1 with 96 frames. The anchor is VTM-13.2 LDB
 
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
-.pdm.toml
-.pdm-python
-.pdm-build/
+|                                                              |   HEVC_B    |   MCL-JCV   |     UVG     |   USTC-TD   |
+| :----------------------------------------------------------: | :---------: | :---------: | :---------: | :---------: |
+| [DCVC-HEM](https://dl.acm.org/doi/abs/10.1145/3503161.3547845) |    10.0     |     4.9     |     1.2     |    27.2     |
+| [DCVC-DC](https://openaccess.thecvf.com/content/CVPR2023/papers/Li_Neural_Video_Compression_With_Diverse_Contexts_CVPR_2023_paper.pdf) |   $-$10.8   |   $-$13.0   |   $-$21.2   |    11.9     |
+| [DCVC-FM](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Neural_Video_Compression_with_Feature_Modulation_CVPR_2024_paper.pdf) |   $-$11.7   |   $-$12.5   |   $-$24.3   |    23.9     |
+|                       **SEVC (ours)**                        | **$-$17.5** | **$-$27.7** | **$-$33.2** | **$-$12.5** |
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
+<img src="./assets/rd.png" alt="visualization" style="zoom:50%;"/>
 
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
+### Visualizations
 
-# SageMath parsed files
-*.sage.py
+- Our SEVC can get better reconstructed MVs on the decoder side in large motion sequences. 
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+<img src="./assets/motion_compare.png" alt="visualization" style="zoom:20%;"/>
 
-# Spyder project settings
-.spyderproject
-.spyproject
+- Spatial references augment the context for frame coding. For those emeging objects, which do not appear in previous frames, SEVC gives a better description in deep contexts.
 
-# Rope project settings
-.ropeproject
+<img src="./assets/visualization.png" alt="visualization" style="zoom:30%;"/>
 
-# mkdocs documentation
-/site
+---
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+### Installation
 
-# Pyre type checker
-.pyre/
+This implementation of SEVC is based on [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC) and [CompressAI](https://github.com/InterDigitalInc/CompressAI), please refer to them for more information.
 
-# pytype static type analyzer
-.pytype/
+<details>
+  <summary><font size="5">1. Install the dependencies</font></summary><br>
 
-# Cython debug symbols
-cython_debug/
+```shell
+conda create -n $YOUR_PY38_ENV_NAME python=3.8
+conda activate $YOUR_PY38_ENV_NAME
 
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
+conda install pytorch==1.10.0 torchvision==0.11.0 cudatoolkit=11.3 -c pytorch
+pip install pytorch_ssim scipy matplotlib tqdm bd-metric pillow pybind11
+```
+
+</details>
+
+<details>
+  <summary><font size="5">2. Prepare test datasets</font></summary><br>
+
+For testing the RGB sequences, we use [FFmpeg]](https://github.com/FFmpeg/FFmpeg) to convert original YUV 420 data to RGB data.
+
+A recommended structure of dataset is like:
+
+```
+test_datasets/
+    ├── HEVC_B/
+    │   ├── BQTerrace_1920x1080_60/
+    │   │   ├── im00001.png
+    │   │   ├── im00002.png
+    │   │   ├── im00003.png
+    │   │   └── ...
+    │   ├── BasketballDrive_1920x1080_50/
+    │   │   ├── im00001.png
+    │   │   ├── im00002.png
+    │   │   ├── im00003.png
+    │   │   └── ...
+    │   └── ...
+    ├── HEVC_C/
+    │   └── ... (like HEVC_B)
+    └── HEVC_D/
+        └── ... (like HEVC_C)
+```
+
+</details>
+
+<details>
+  <summary><font size="5">3. Compile the arithmetic coder</font></summary><br>
+
+If you need real bitstream writing, please compile the arithmetic coder through the following commands.
+
+> On Windows
+
+```
+cd src
+mkdir build
+cd build
+conda activate $YOUR_PY38_ENV_NAME
+cmake ../cpp -G "Visual Studio 16 2019" -A x64
+cmake --build . --config Release
+```
+
+> On Linux
+
+```
+sudo apt-get install cmake g++
+cd src
+mkdir build
+cd build
+conda activate $YOUR_PY38_ENV_NAME
+cmake ../cpp -DCMAKE_BUILD_TYPE=Release
+make -j
+```
+
+</details>
+
+---
+
+### :rocket: Usage
+
+<details>
+  <summary><font size="5">1. Evaluation</font></summary><br>
+
+Run the following command to evaluate the model and generate a json file which contains test results. 
+
+```shell
+python test.py --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar --rate_num 4 --test_config ./config_F96-IP-1.json --cuda 1 --worker 1 --output_path output.json
+```
+
+- We use the same Intra model as DCVC-DC. `I_frame_model.pth.tar` can be downloaded from [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
+- Our `P_frame_model.pth.tar` can be downloaded from [xxx](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
+
+Put the model weights into `./ckpt`  directory and run the above command.
+
+Our model supports variable bitrate. Set different `i_frame_q_indexes`  and `p_frame_q_indexes` to evaluate different bitrates.
+
+```
+python test.py --i_frame_model_path /data/Tombobo/DCVC_bo/model/Iframe/cvpr2023_image_psnr.pth.tar --p_frame_model_path /data/Tombobo/DCVC_bo/model/BYF/Final/LBNVC_psnr_f6w0.1_f32w0.05_epo5.pth.tar --rate_num 4 --test_config ./config_F96-IP-1.json --cuda 1 --worker 1 --output_path output.json
+```
+
+</details>
+
+<details>
+  <summary><font size="5">2. Real Encoding/Decoding</font></summary><br>
+
+If you want
+
+</details>
+
+---
+
+### :book: Citation
+
+**If this repo helped you, a ⭐ star or citation would make my day!**
+
+```bibtex
+@inproceedings{bian2025augmented,
+  title={{Augmented Deep Contexts for Spatially Embedded Video Coding}},
+  author={Bian, Yifan and Tang, Chuanbo and Li, Li and Liu, Dong},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages={xxx},
+  year={2025}
+}
+```
+
+### :email: Contact
+
+If you have any questions, please contact me: 
+
+- togelbian@gmail.com (main)
+- esakak@mail.ustc.edu.cn (alternative)
+
+---
+
+### License
+
+This work is licensed under MIT license. See the [LICENSE](https://github.com/Luciennnnnnn/DualFormer/blob/main/LICENSE) for details.
+
+### Acknowledgement
+
+Our work is implemented based on [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC) and [CompressAI](https://github.com/InterDigitalInc/CompressAI).
