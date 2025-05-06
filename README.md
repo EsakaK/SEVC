@@ -10,21 +10,19 @@ Yifan Bian, Chuanbo Tang, Li Li, Dong Liu
 
 </div>
 
----
 
 ## 📌Overview
 
-Our **S**patially **E**mbedded **V**ideo **C**odec (**SEVC**) significantly advances the performance of Neural Video Codecs (NVCs). Furthermore, SEVC posses enhanced robustness for special video sequences while offering additional functionality.
+Our **S**patially **E**mbedded **V**ideo **C**odec (**SEVC**) significantly advances the performance of Neural Video Codecs (NVCs). Furthermore, SEVC possess enhanced robustness for special video sequences while offering additional functionality.
 
 - **Large Motions**: SEVC can better handle sequences with large motions through a progressive motion augmentation. 
 - **Emerging Objects**: Equipped with spatial references, SEVC can better handle sequences with emerging objects in low-delay scenes. 
 - **Fast Decoding**: SEVC provides a fast decoding mode to reconstruct a low-resolution video. 
 
-## :loudspeaker: News
+### :loudspeaker: News
 
 * \[2025/04/05\]:  Our paper is selected as a **highlight** paper [**13.5%**].
 
----
 
 ## :bar_chart: Experimental Results
 
@@ -44,24 +42,22 @@ Results comparison (BD-Rate and RD curve) for PSNR. The Intra Period is –1 wit
 
 ### Visualizations
 
-- Our SEVC can get better reconstructed MVs on the decoder side in large motion sequences. Here we choose [RAFT](https://arxiv.org/pdf/2003.12039) as the pseudo motion label.
+- Our SEVC can get better reconstructed MVs on the decoder side in large motion sequences. Here, we choose [RAFT](https://arxiv.org/pdf/2003.12039) as the pseudo motion label.
 
 <div align="center">
 <img src="./assets/motion_compare.png" alt="visualization" width="600"/>
 </div>
 
-- Spatial references augment the context for frame coding. For those emeging objects, which do not appear in previous frames, SEVC gives a better description in deep contexts.
+- Spatial references augment the context for frame coding. For those emerging objects, which do not appear in previous frames, SEVC gives a better description in deep contexts.
 
 <div align="center">
 <img src="./assets/visualization.png" alt="visualization" width="900""/>
 </div>
 
 
----
-
 ## Installation
 
-This implementation of SEVC is based on [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC) and [CompressAI](https://github.com/InterDigitalInc/CompressAI), please refer to them for more information.
+This implementation of SEVC is based on [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC) and [CompressAI](https://github.com/InterDigitalInc/CompressAI). Please refer to them for more information.
 
 <details>
   <summary><font size="5">1. Install the dependencies</font></summary><br>
@@ -135,7 +131,6 @@ make -j
 
 </details>
 
----
 
 ## :rocket: Usage
 
@@ -155,10 +150,6 @@ Put the model weights into the `./ckpt`  directory and run the above command.
 
 Our model supports variable bitrate. Set different `i_frame_q_indexes`  and `p_frame_q_indexes` to evaluate different bitrates.
 
-```
-python test.py --i_frame_model_path /data/Tombobo/DCVC_bo/model/Iframe/cvpr2023_image_psnr.pth.tar --p_frame_model_path /data/Tombobo/DCVC_bo/model/BYF/Final/LBNVC_psnr_f6w0.1_f32w0.05_epo5.pth.tar --rate_num 4 --test_config ./config_F96-IP-1.json --cuda 1 --worker 1 --output_path output.json
-```
-
 </details>
 
 <details>
@@ -168,7 +159,6 @@ If you want
 
 </details>
 
----
 
 ## :book: Citation
 
