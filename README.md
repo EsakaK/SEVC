@@ -4,7 +4,7 @@
 
 Yifan Bian, Chuanbo Tang, Li Li, Dong Liu
 
-[[`Arxiv`](https://arxiv.org/abs/2307.12027)] [[`BibTeX`](#citation)] [[`Dataset`](https://github.com/EsakaK/USTC-TD)] 
+[[`Arxiv`](https://arxiv.org/abs/2307.12027)] [[`BibTeX`](#book-citation)] [[`Dataset`](https://github.com/EsakaK/USTC-TD)] 
 
 [![python](https://img.shields.io/badge/Python-3.8-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-380/) [![pytorch](https://img.shields.io/badge/PyTorch-1.12-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/) [![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](#license)
 
@@ -170,7 +170,7 @@ If `--fast 1` is used, only a 4x downsampled video will be encoded.
 python decoder.py -b $bin_path -o $rec_path --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar
 ```
 If it is a fast mode, you will only get a 4x downsampled video.
-If it is not a fast mode, you will get two video: 4x downsampled and full resolution.
+If it is not a fast mode, you will get two videos: 4x downsampled and full resolution.
 
 </details>
 
