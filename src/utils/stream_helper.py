@@ -90,12 +90,21 @@ def filesize(filepath: str) -> int:
     return Path(filepath).stat().st_size
 
 
+def write_ints(fd, values, fmt=">{:d}i"):
+    fd.write(struct.pack(fmt.format(len(values)), *values))
+
+
 def write_uints(fd, values, fmt=">{:d}I"):
     fd.write(struct.pack(fmt.format(len(values)), *values))
 
 
 def write_uchars(fd, values, fmt=">{:d}B"):
     fd.write(struct.pack(fmt.format(len(values)), *values))
+
+
+def read_ints(fd, n, fmt=">{:d}i"):
+    sz = struct.calcsize("I")
+    return struct.unpack(fmt.format(n), fd.read(n * sz))
 
 
 def read_uints(fd, n, fmt=">{:d}I"):
@@ -149,7 +158,7 @@ def decode_i(inputpath):
     return q_in_ckpt, q_index, bit_stream
 
 
-def encode_p(string, q_in_ckpt, q_index, output):
+def encode_p(q_in_ckpt, q_index, string, output):
     with Path(output).open("wb") as f:
         string_length = len(string)
         write_uchars(f, ((q_in_ckpt << 7) + (q_index << 1),))
@@ -170,7 +179,9 @@ def decode_p(inputpath):
     return q_in_ckpt, q_index, string
 
 
-def encode_p_two_layer(string1, string2, q_in_ckpt, q_index, output):
+def encode_p_two_layer(q_in_ckpt, q_index, string, output):
+    string1 = string[0]
+    string2 = string[1]
     with Path(output).open("wb") as f:
         write_uchars(f, ((q_in_ckpt << 7) + (q_index << 1),))
         string_length = len(string1)

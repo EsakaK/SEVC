@@ -63,7 +63,7 @@
             }
         },
         "MCL-JCV": {
-            "test": 1,
+            "test": 0,
             "base_path": "MCL-JCV",
             "src_type": "png",
             "sequences": {
@@ -100,7 +100,7 @@
             }
         },
         "UVG": {
-            "test": 1,
+            "test": 0,
             "base_path": "UVG",
             "src_type": "png",
             "sequences": {

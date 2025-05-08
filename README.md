@@ -51,7 +51,7 @@ Results comparison (BD-Rate and RD curve) for PSNR. The Intra Period is –1 wit
 - Spatial references augment the context for frame coding. For those emerging objects, which do not appear in previous frames, SEVC gives a better description in deep contexts.
 
 <div align="center">
-<img src="./assets/visualization.png" alt="visualization" width="900""/>
+<img src="./assets/visualization.png" alt="visualization" width="900"/>
 </div>
 
 
@@ -156,6 +156,16 @@ Our model supports variable bitrate. Set different `i_frame_q_indexes`  and `p_f
   <summary><font size="5">2. Real Encoding/Decoding</font></summary><br>
 
 If you want
+```shell
+python encoder.py -i $video_path -q $q_index --height $video_height --width $video_width --frames $frame_to_encode --ip -1 --fast $fast_mode -b $bin_path --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar
+```
+- `$video_path`: input video path. For PNG files, it should be a directory.
+- `$q_index`: 0-63. Less value indicates lower quality.
+- `$fast`: 0/1. 1 indicates openning fast encoding mode.
+
+```shell
+python encoder.py -i /data/EsakaK/png_bmk/old_bt601/HEVC_D/RaceHorses_416x240_30 -q 43 --height 240 --width 416 -f 3 --fast 1 -b /output --i_frame_model_path /model/EsakaK/My_Model/DCVC-DC/cvpr_I_psnr.pth.tar --p_frame_model_path /data/Tombobo/DCVC_bo/model/BYF/Final/LBNVC_psnr_f6w0.1_f32w0.05_epo5.pth.tar
+```
 
 </details>
 

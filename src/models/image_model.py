@@ -199,9 +199,9 @@ class IntraNoAR(CompressionModel):
         }
         return result
 
-    def encode(self, x, q_index):
+    def encode_one_frame(self, x, q_index):
         x_padded, slice_shape = pad_for_x(x, p=16, mode='replicate')  # 1080p uses replicate
-        encoded = self.compress(x_padded, True, q_index)
+        encoded = self.compress(x_padded, False, q_index)
         if slice_shape == (0, 0, 0, 0):
             ref_BL, _ = pad_for_x(imresize(encoded['x_hat'], scale=0.25), p=16)
         else:

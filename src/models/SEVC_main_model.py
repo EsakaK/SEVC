@@ -49,6 +49,10 @@ class DMC(nn.Module):
             feature = self.feature_adaptor[index](dpb["ref_feature"])
         return feature
 
+    def update(self, force=False):
+        self.BL_codec.update(force)
+        self.EL_codec.update(force)
+
     def forward_one_frame(self, x, dpb_BL, dpb_EL, q_in_ckpt=False, q_index=None, frame_index=None):
         B, _, H, W = x.size()
         x_EL, flag_shape = pad_for_x(x, p=16, mode='replicate')
@@ -150,44 +154,52 @@ class DMC(nn.Module):
             }
             return result
 
-    def encode(self, x, dpb_BL, dpb_EL, q_index, frame_idx, fast=False):
-        device = x.device
-        dpb_copy = dpb_EL.copy()
-        x_padded, slice_shape = pad_for_x(x, p=16, mode='replicate')  # 1080p uses replicate
+    def encode_one_frame(self, x, dpb_BL, dpb_EL, q_index, frame_idx):
+        if dpb_EL is None:
+            encoded = self.compress_base(x, dpb_BL, False, q_index, frame_idx)
+            return encoded['dpb_BL'], None, [encoded['base_bit_stream'], None]
 
-        if slice_shape == (0, 0, 0, 0):
+        encoded = self.compress(x, dpb_BL, dpb_EL, False, q_index, frame_idx)
+        return encoded['dpb_BL'], encoded['dpb_EL'], [encoded['base_bit_stream'], encoded['bit_stream']]
+
+    def compress_base(self, x, base_dpb, q_in_ckpt, q_index, frame_idx):
+        base_x = imresize(x, scale=0.25)
+        base_x_padded, _ = pad_for_x(base_x, p=16)
+        result = self.BL_codec.compress(base_x_padded, base_dpb, q_in_ckpt, q_index, frame_idx)
+        return {
+            'dpb_BL': result['dpb'],
+            'dpb_EL': None,
+            'base_bit_stream': result['bit_stream'],
+            'bit_stream': None
+        }
+
+    def compress(self, x, base_dpb, dpb, q_in_ckpt, q_index, frame_idx):
+        x_padded, slice_shape_EL = pad_for_x(x, p=16, mode='replicate')  # 1080p uses replicate
+        if slice_shape_EL == (0, 0, 0, 0):
             base_x = imresize(x, scale=0.25)
-            base_x, _ = pad_for_x(base_x, p=16)
+            base_x_padded, slice_shape_BL = pad_for_x(base_x, p=16)
         else:
-            base_x = imresize(x_padded, scale=0.25)  # direct downsampling fo 1080p
-        if fast:
-            encoded = self.compress(base_x, x_padded, dpb_BL, dpb_EL, True, q_index, frame_idx, slice_shape)
-        else:
-            encoded = self.compress(base_x, x_padded, dpb_BL, dpb_EL, True, q_index, frame_idx, slice_shape)
-
-    def compress_base(self, base_x, base_dpb, dpb, q_in_ckpt, q_index, frame_idx):
-        pass
-    def compress(self, base_x, x, base_dpb, dpb, q_in_ckpt, q_index, frame_idx, slice_shape):
-        base_result = self.BL_codec.compress(base_x, base_dpb, q_in_ckpt, q_index, frame_idx)
-        if slice_shape == (0, 0, 0, 0):  # train or CDE !!!!!!!!
-            feature_hat_BL = slice_to_x(base_result['dpb']['ref_feature'], slice_shape)
-            mv_hat_BL = slice_to_x(base_result['dpb']['ref_mv'], slice_shape)
+            base_x_padded = imresize(x_padded, scale=0.25)  # direct downsampling fo 1080p
+        base_result = self.BL_codec.compress(base_x_padded, base_dpb, q_in_ckpt, q_index, frame_idx)
+        if slice_shape_EL == (0, 0, 0, 0):
+            feature_hat_BL = slice_to_x(base_result['dpb']['ref_feature'], slice_shape_BL)
+            mv_hat_BL = slice_to_x(base_result['dpb']['ref_mv'], slice_shape_BL)
         else:
             feature_hat_BL = base_result['dpb']['ref_feature']
             mv_hat_BL = base_result['dpb']['ref_mv']
-            slice_shape = None
+            slice_shape_BL = None
         y_hat_BL = base_result['dpb']['ref_y']
         ref_feature = self.feature_extract(dpb, index=frame_idx)
         context1, context2, context3, warp_frame = self.ILP(feature_hat_BL, mv_hat_BL, ref_feature, dpb['ref_frame'])
-        latent_prior = self.latent_ILP(y_hat_BL, dpb['ref_ys'], slice_shape)
+        latent_prior = self.latent_ILP(y_hat_BL, dpb['ref_ys'], slice_shape_BL)
         # EL
         dpb['ref_latent'] = latent_prior
         dpb['ref_feature'] = [context1, context2, context3]
 
         result = self.EL_codec.compress(x, dpb, q_in_ckpt, q_index)
         all_res = {
-            'base_dpb': base_result['dpb'],
-            'dpb': result['dpb'],
+            'dpb_BL': base_result['dpb'],
+            'dpb_EL': result['dpb'],
             'base_bit_stream': base_result['bit_stream'],
             'bit_stream': result['bit_stream']
         }
