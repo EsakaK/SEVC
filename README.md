@@ -183,8 +183,9 @@ If you have any questions, please contact me:
 
 ## License
 
-This work is licensed under MIT license. See the [LICENSE](https://github.com/Luciennnnnnn/DualFormer/blob/main/LICENSE) for details.
+This work is licensed under MIT license.
 
 ## Acknowledgement
 
 Our work is implemented based on [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC) and [CompressAI](https://github.com/InterDigitalInc/CompressAI).
+
