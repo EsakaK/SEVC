@@ -144,7 +144,7 @@ python test.py --rate_num 4 --test_config ./config_F96-IP-1.json --cuda 1 --work
 ```
 
 - We use the same Intra model as DCVC-DC. `cvpr2023_i_frame.pth.tar` can be downloaded from [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
-- Our `cvpr2025_p_frame.pth.tar` can be downloaded from [xxx](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC). `cvpr2023_i_frame.pth.tar` is also available here.
+- Our `cvpr2025_p_frame.pth.tar` can be downloaded from [CVPR2025-SEVC](https://drive.google.com/drive/folders/1H4IkHhkglafeCtLywgnIGR2N_YMVcflt?usp=sharing). `cvpr2023_i_frame.pth.tar` is also available here.
 
 Put the model weights into the `./ckpt`  directory and run the above command.
 
