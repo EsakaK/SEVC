@@ -156,6 +156,7 @@ Our model supports variable bitrate. Set different `i_frame_q_indexes`  and `p_f
   <summary><font size="5">2. Real Encoding/Decoding</font></summary><br>
 
 If you want real encoding/decoding, please use the encoder/decoder script as follows:
+
 **Encoding**
 ```shell
 python encoder.py -i $video_path -q $q_index --height $video_height --width $video_width --frames $frame_to_encode --ip -1 --fast $fast_mode -b $bin_path --i_frame_model_path ./ckpt/cvpr2023_i_frame.pth.tar --p_frame_model_path ./ckpt/cvpr2025_p_frame.pth.tar
