@@ -183,7 +183,7 @@ To intuitively verify the temporal stability of the two resolution videos, we pr
 - BasketballDrive_1920x1080_50: q1, q2, q3, q4 
 - RaceHorses_832x480_30: q1, q2, q3, q4
 
-You can find them in [examples](https://pan.baidu.com/s/1KA34wC3jFZzG6A-XipUctA?pwd=7kd4)
+You can find them in [examples](https://pan.baidu.com/s/1KA34wC3jFZzG6A-XipUctA?pwd=7kd4).
 
 They are stored in rgb24 format. You can use the [YUV Player](https://github.com/Tee0125/yuvplayer/releases/tag/2.5.0) to display them and observe the temporal stability.
 
