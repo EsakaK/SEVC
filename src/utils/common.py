@@ -125,7 +125,7 @@ def dump_json(obj, fid, float_digits=-1, **kwargs):
         json.dump(obj, fid, **kwargs)
 
 
-def generate_log_json(frame_num, frame_pixel_num, test_time, frame_types, bits, psnrs, ssims,
+def generate_log_json(frame_num, frame_pixel_num, frame_types, bits, psnrs, ssims,
                       psnrs_y=None, psnrs_u=None, psnrs_v=None,
                       ssims_y=None, ssims_u=None, ssims_v=None, verbose=False):
     include_yuv = psnrs_y is not None

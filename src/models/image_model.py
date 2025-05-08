@@ -7,9 +7,10 @@ import numpy as np
 
 from .common_model import CompressionModel
 from ..layers.layers import conv3x3, DepthConvBlock2, ResidualBlockUpsample, ResidualBlockWithStride
-from .video_net import UNet2, LowerBound
-from ..utils.stream_helper import encode_i, decode_i, get_downsampled_shape, filesize, \
-    get_state_dict
+from .video_net import UNet2
+from ..utils.stream_helper import decode_i, get_downsampled_shape, filesize
+from ..utils.stream_helper import get_state_dict, pad_for_x, encode_i, decode_i
+from src.utils.core import imresize
 
 
 class IntraEncoder(nn.Module):
@@ -102,6 +103,7 @@ class IntraNoAR(CompressionModel):
         self.q_basic_dec = nn.Parameter(torch.ones((1, 128, 1, 1)))
         self.q_scale_dec = nn.Parameter(torch.ones((anchor_num, 1, 1, 1)))
         self.q_scale_dec_fine = None
+
     def get_q_for_inference(self, q_in_ckpt, q_index):
         q_scale_enc = self.q_scale_enc[:, 0, 0, 0] if q_in_ckpt else self.q_scale_enc_fine
         curr_q_enc = self.get_curr_q(q_scale_enc, self.q_basic_enc, q_index=q_index)
@@ -196,6 +198,29 @@ class IntraNoAR(CompressionModel):
             'x_hat': x_hat,
         }
         return result
+
+    def encode(self, x, q_index):
+        x_padded, slice_shape = pad_for_x(x, p=16, mode='replicate')  # 1080p uses replicate
+        encoded = self.compress(x_padded, True, q_index)
+        if slice_shape == (0, 0, 0, 0):
+            ref_BL, _ = pad_for_x(imresize(encoded['x_hat'], scale=0.25), p=16)
+        else:
+            ref_BL = imresize(encoded['x_hat'], 0.25)  # 1080p direct resize
+        dpb_BL = {
+            "ref_frame": ref_BL,
+            "ref_feature": None,
+            "ref_mv_feature": None,
+            "ref_y": None,
+            "ref_mv_y": None,
+        }
+        dpb_EL = {
+            "ref_frame": encoded["x_hat"],
+            "ref_feature": None,
+            "ref_mv_feature": None,
+            "ref_ys": [None, None, None],
+            "ref_mv_y": None,
+        }
+        return dpb_BL, dpb_EL, encoded['bit_stream']
 
     def compress(self, x, q_in_ckpt, q_index):
         curr_q_enc, curr_q_dec = self.get_q_for_inference(q_in_ckpt, q_index)

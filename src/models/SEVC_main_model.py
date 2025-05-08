@@ -150,6 +150,23 @@ class DMC(nn.Module):
             }
             return result
 
+    def encode(self, x, dpb_BL, dpb_EL, q_index, frame_idx, fast=False):
+        device = x.device
+        dpb_copy = dpb_EL.copy()
+        x_padded, slice_shape = pad_for_x(x, p=16, mode='replicate')  # 1080p uses replicate
+
+        if slice_shape == (0, 0, 0, 0):
+            base_x = imresize(x, scale=0.25)
+            base_x, _ = pad_for_x(base_x, p=16)
+        else:
+            base_x = imresize(x_padded, scale=0.25)  # direct downsampling fo 1080p
+        if fast:
+            encoded = self.compress(base_x, x_padded, dpb_BL, dpb_EL, True, q_index, frame_idx, slice_shape)
+        else:
+            encoded = self.compress(base_x, x_padded, dpb_BL, dpb_EL, True, q_index, frame_idx, slice_shape)
+
+    def compress_base(self, base_x, base_dpb, dpb, q_in_ckpt, q_index, frame_idx):
+        pass
     def compress(self, base_x, x, base_dpb, dpb, q_in_ckpt, q_index, frame_idx, slice_shape):
         base_result = self.BL_codec.compress(base_x, base_dpb, q_in_ckpt, q_index, frame_idx)
         if slice_shape == (0, 0, 0, 0):  # train or CDE !!!!!!!!

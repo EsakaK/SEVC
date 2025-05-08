@@ -128,11 +128,10 @@ def read_ushorts(fd, n, fmt=">{:d}H"):
     return struct.unpack(fmt.format(n), fd.read(n * sz))
 
 
-def encode_i(height, width, q_in_ckpt, q_index, bit_stream, output):
+def encode_i(q_in_ckpt, q_index, bit_stream, output):
     with Path(output).open("wb") as f:
         stream_length = len(bit_stream)
 
-        write_uints(f, (height, width))
         write_uchars(f, ((q_in_ckpt << 7) + (q_index << 1),))  # 1-bit flag and 6-bit index
         write_uints(f, (stream_length,))
         write_bytes(f, bit_stream)
@@ -140,9 +139,6 @@ def encode_i(height, width, q_in_ckpt, q_index, bit_stream, output):
 
 def decode_i(inputpath):
     with Path(inputpath).open("rb") as f:
-        header = read_uints(f, 2)
-        height = header[0]
-        width = header[1]
         flag = read_uchars(f, 1)[0]
         q_in_ckpt = (flag >> 7) > 0
         q_index = ((flag & 0x7f) >> 1)
@@ -150,7 +146,7 @@ def decode_i(inputpath):
 
         bit_stream = read_bytes(f, stream_length)
 
-    return height, width, q_in_ckpt, q_index, bit_stream
+    return q_in_ckpt, q_index, bit_stream
 
 
 def encode_p(string, q_in_ckpt, q_index, output):

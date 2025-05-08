@@ -56,8 +56,6 @@ def PSNR(input1, input2):
 def run_test(p_frame_net, i_frame_net, args):
     frame_num = args['frame_num']
     gop_size = args['gop_size']
-    if gop_size == -1:
-        gop_size = 999
     refresh_interval = args['refresh_interval']
     device = next(i_frame_net.parameters()).device
 
@@ -65,24 +63,15 @@ def run_test(p_frame_net, i_frame_net, args):
 
     frame_types = []
     psnrs = []
-    psnrs_y = []
-    psnrs_u = []
-    psnrs_v = []
     msssims = []
-    msssims_y = []
-    msssims_u = []
-    msssims_v = []
 
     bits = []
-    bits_res = []
-    bits_mv = []
     frame_pixel_num = 0
 
     start_time = time.time()
     p_frame_number = 0
     with torch.no_grad():
         for frame_idx in range(frame_num):
-            frame_start_time = time.time()
             rgb = src_reader.read_one_frame(dst_format="rgb")
             x = np_image_to_tensor(rgb)
             x = x.to(device)
@@ -120,7 +109,7 @@ def run_test(p_frame_net, i_frame_net, args):
                 }
                 recon_frame = result["x_hat"]
                 frame_types.append(0)
-                bits.append(result["bit"])
+                bits.append(result["bit"].item())
             else:
                 if frame_idx % refresh_interval == 1:
                     dpb_BL['ref_feature'] = None
@@ -130,7 +119,7 @@ def run_test(p_frame_net, i_frame_net, args):
                 dpb_EL = result["dpb_EL"]
                 recon_frame = dpb_EL["ref_frame"]
                 frame_types.append(1)
-                bits.append(result['bit'])
+                bits.append(result['bit'].item())
                 p_frame_number += 1
 
             recon_frame = recon_frame.clamp_(0, 1)
@@ -145,8 +134,7 @@ def run_test(p_frame_net, i_frame_net, args):
 
     test_time = {}
     test_time['test_time'] = time.time() - start_time
-    log_result = generate_log_json(frame_num, frame_pixel_num, test_time,
-                                   frame_types, bits, psnrs, msssims)
+    log_result = generate_log_json(frame_num, frame_pixel_num, frame_types, bits, psnrs, msssims)
     return log_result
 
 
