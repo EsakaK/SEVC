@@ -165,12 +165,13 @@ python encoder.py -i $video_path -q $q_index --height $video_height --width $vid
 - `$frames`: N frames | Frames to be encoded. Default is set to -1 (all frames).
 - `$fast`: 0/1 | 1 indicates openning fast encoding mode.
 If `--fast 1` is used, only a 4x downsampled video will be encoded.
+- 
 **Decoding**
 ```shell
 python decoder.py -b $bin_path -o $rec_path --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar
 ```
-If it is a fast mode, you will only get a 4x downsampled video.
-If it is not a fast mode, you will get two videos: 4x downsampled and full resolution.
+- If it is a fast mode, you will only get a 4x downsampled video.
+- If it is not a fast mode, you will get two videos: 4x downsampled and full resolution.
 
 </details>
 
