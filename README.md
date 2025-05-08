@@ -167,6 +167,10 @@ python encoder.py -i $video_path -q $q_index --height $video_height --width $vid
 python encoder.py -i /data/EsakaK/png_bmk/old_bt601/HEVC_D/RaceHorses_416x240_30 -q 43 --height 240 --width 416 -f 3 --fast 1 -b /output --i_frame_model_path /model/EsakaK/My_Model/DCVC-DC/cvpr_I_psnr.pth.tar --p_frame_model_path /data/Tombobo/DCVC_bo/model/BYF/Final/LBNVC_psnr_f6w0.1_f32w0.05_epo5.pth.tar
 ```
 
+```shell
+python decoder.py -b /output -o /output/rec --i_frame_model_path /model/EsakaK/My_Model/DCVC-DC/cvpr_I_psnr.pth.tar --p_frame_model_path /data/Tombobo/DCVC_bo/model/BYF/Final/LBNVC_psnr_f6w0.1_f32w0.05_epo5.pth.tar
+```
+
 </details>
 
 

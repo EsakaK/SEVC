@@ -137,53 +137,41 @@ def read_ushorts(fd, n, fmt=">{:d}H"):
     return struct.unpack(fmt.format(n), fd.read(n * sz))
 
 
-def encode_i(q_in_ckpt, q_index, bit_stream, output):
+def encode_i(bit_stream, output):
     with Path(output).open("wb") as f:
         stream_length = len(bit_stream)
-
-        write_uchars(f, ((q_in_ckpt << 7) + (q_index << 1),))  # 1-bit flag and 6-bit index
         write_uints(f, (stream_length,))
         write_bytes(f, bit_stream)
 
 
 def decode_i(inputpath):
     with Path(inputpath).open("rb") as f:
-        flag = read_uchars(f, 1)[0]
-        q_in_ckpt = (flag >> 7) > 0
-        q_index = ((flag & 0x7f) >> 1)
         stream_length = read_uints(f, 1)[0]
-
         bit_stream = read_bytes(f, stream_length)
 
-    return q_in_ckpt, q_index, bit_stream
+    return bit_stream
 
 
-def encode_p(q_in_ckpt, q_index, string, output):
+def encode_p(string, output):
     with Path(output).open("wb") as f:
         string_length = len(string)
-        write_uchars(f, ((q_in_ckpt << 7) + (q_index << 1),))
         write_uints(f, (string_length,))
         write_bytes(f, string)
 
 
 def decode_p(inputpath):
     with Path(inputpath).open("rb") as f:
-        flag = read_uchars(f, 1)[0]
-        q_in_ckpt = (flag >> 7) > 0
-        q_index = ((flag & 0x7f) >> 1)
-
         header = read_uints(f, 1)
         string_length = header[0]
         string = read_bytes(f, string_length)
 
-    return q_in_ckpt, q_index, string
+    return [string]
 
 
-def encode_p_two_layer(q_in_ckpt, q_index, string, output):
+def encode_p_two_layer(string, output):
     string1 = string[0]
     string2 = string[1]
     with Path(output).open("wb") as f:
-        write_uchars(f, ((q_in_ckpt << 7) + (q_index << 1),))
         string_length = len(string1)
         write_uints(f, (string_length,))
         write_bytes(f, string1)
@@ -195,10 +183,6 @@ def encode_p_two_layer(q_in_ckpt, q_index, string, output):
 
 def decode_p_two_layer(inputpath):
     with Path(inputpath).open("rb") as f:
-        flag = read_uchars(f, 1)[0]
-        q_in_ckpt = (flag >> 7) > 0
-        q_index = ((flag & 0x7f) >> 1)
-
         header = read_uints(f, 1)
         string_length = header[0]
         string1 = read_bytes(f, string_length)
@@ -207,4 +191,4 @@ def decode_p_two_layer(inputpath):
         string_length = header[0]
         string2 = read_bytes(f, string_length)
 
-    return q_in_ckpt, q_index, string1, string2
+    return [string1, string2]

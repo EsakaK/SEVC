@@ -8,8 +8,8 @@ import numpy as np
 from .common_model import CompressionModel
 from ..layers.layers import conv3x3, DepthConvBlock2, ResidualBlockUpsample, ResidualBlockWithStride
 from .video_net import UNet2
-from ..utils.stream_helper import decode_i, get_downsampled_shape, filesize
-from ..utils.stream_helper import get_state_dict, pad_for_x, encode_i, decode_i
+from ..utils.stream_helper import get_downsampled_shape, filesize
+from ..utils.stream_helper import get_state_dict, pad_for_x, get_slice_shape
 from src.utils.core import imresize
 
 
@@ -171,34 +171,6 @@ class IntraNoAR(CompressionModel):
         }
         return result
 
-    def encode_decode(self, x, q_in_ckpt, q_index, output_path=None, pic_width=None, pic_height=None):
-        # pic_width and pic_height may be different from x's size. X here is after padding
-        # x_hat has the same size with x
-        if output_path is None:
-            encoded = self.forward(x, q_in_ckpt, q_index)
-            result = {
-                'bit': encoded['bit'].item(),
-                'x_hat': encoded['x_hat'],
-            }
-            return result
-
-        assert pic_height is not None
-        assert pic_width is not None
-        compressed = self.compress(x, q_in_ckpt, q_index)
-        bit_stream = compressed['bit_stream']
-        encode_i(pic_height, pic_width, q_in_ckpt, q_index, bit_stream, output_path)
-        bit = filesize(output_path) * 8
-
-        height, width, q_in_ckpt, q_index, bit_stream = decode_i(output_path)
-        decompressed = self.decompress(bit_stream, height, width, q_in_ckpt, q_index)
-        x_hat = decompressed['x_hat']
-
-        result = {
-            'bit': bit,
-            'x_hat': x_hat,
-        }
-        return result
-
     def encode_one_frame(self, x, q_index):
         x_padded, slice_shape = pad_for_x(x, p=16, mode='replicate')  # 1080p uses replicate
         encoded = self.compress(x_padded, False, q_index)
@@ -254,6 +226,31 @@ class IntraNoAR(CompressionModel):
             "x_hat": x_hat,
         }
         return result
+
+    def decode_one_frame(self, bit_stream, height, width, q_index):
+        decompressed = self.decompress(bit_stream, height, width, False, q_index)
+        x_hat = decompressed['x_hat']
+        slice_shape = get_slice_shape(height, width, p=16)  # 1080p uses replicate
+        if slice_shape == (0, 0, 0, 0):
+            ref_BL, _ = pad_for_x(imresize(x_hat, scale=0.25), p=16)
+        else:
+            ref_BL = imresize(x_hat, 0.25)  # 1080p direct resize
+        dpb_BL = {
+            "ref_frame": ref_BL,
+            "ref_feature": None,
+            "ref_mv_feature": None,
+            "ref_y": None,
+            "ref_mv_y": None,
+        }
+        dpb_EL = {
+            "ref_frame": x_hat,
+            "ref_feature": None,
+            "ref_mv_feature": None,
+            "ref_ys": [None, None, None],
+            "ref_mv_y": None,
+        }
+
+        return dpb_BL, dpb_EL
 
     def decompress(self, bit_stream, height, width, q_in_ckpt, q_index):
         dtype = next(self.parameters()).dtype
