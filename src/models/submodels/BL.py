@@ -498,7 +498,7 @@ class BL(CompressionModel):
                 "ref_y": y_hat,
                 "ref_mv_y": mv_y_hat,
             },
-            "bit": bit,
+            "bit": bit.item(),
         }
 
     def evaluate(self, x, dpb, q_in_ckpt=False, q_index=None, frame_idx=0):

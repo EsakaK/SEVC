@@ -225,7 +225,7 @@ class EL(CompressionModel):
                 "ref_feature": feature,
                 "ref_ys": ref_ys,
             },
-            "bit": bit,
+            "bit": bit.item(),
         }
 
     def evaluate(self, x, dpb, q_in_ckpt=False, q_index=None):

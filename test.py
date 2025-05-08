@@ -109,7 +109,7 @@ def run_test(p_frame_net, i_frame_net, args):
                 }
                 recon_frame = result["x_hat"]
                 frame_types.append(0)
-                bits.append(result["bit"].item())
+                bits.append(result["bit"])
             else:
                 if frame_idx % refresh_interval == 1:
                     dpb_BL['ref_feature'] = None
@@ -119,7 +119,7 @@ def run_test(p_frame_net, i_frame_net, args):
                 dpb_EL = result["dpb_EL"]
                 recon_frame = dpb_EL["ref_frame"]
                 frame_types.append(1)
-                bits.append(result['bit'].item())
+                bits.append(result['bit'])
                 p_frame_number += 1
 
             recon_frame = recon_frame.clamp_(0, 1)
