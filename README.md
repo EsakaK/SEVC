@@ -140,11 +140,11 @@ make -j
 Run the following command to evaluate the model and generate a JSON file that contains test results. 
 
 ```shell
-python test.py --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar --rate_num 4 --test_config ./config_F96-IP-1.json --cuda 1 --worker 1 --output_path output.json
+python test.py --rate_num 4 --test_config ./config_F96-IP-1.json --cuda 1 --worker 1 --output_path output.json --i_frame_model_path ./ckpt/cvpr2023_i_frame.pth.tar --p_frame_model_path ./ckpt/cvpr2025_p_frame.pth.tar
 ```
 
-- We use the same Intra model as DCVC-DC. `I_frame_model.pth.tar` can be downloaded from [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
-- Our `P_frame_model.pth.tar` can be downloaded from [xxx](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
+- We use the same Intra model as DCVC-DC. `cvpr2023_i_frame.pth.tar` can be downloaded from [DCVC-DC](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC).
+- Our `cvpr2025_p_frame.pth.tar` can be downloaded from [xxx](https://github.com/microsoft/DCVC/tree/main/DCVC-family/DCVC-DC). `cvpr2023_i_frame.pth.tar` is also available here.
 
 Put the model weights into the `./ckpt`  directory and run the above command.
 
@@ -155,21 +155,22 @@ Our model supports variable bitrate. Set different `i_frame_q_indexes`  and `p_f
 <details>
   <summary><font size="5">2. Real Encoding/Decoding</font></summary><br>
 
-If you want
+If you want real encoding/decoding, please use the encoder/decoder script as follows:
+**Encoding**
 ```shell
-python encoder.py -i $video_path -q $q_index --height $video_height --width $video_width --frames $frame_to_encode --ip -1 --fast $fast_mode -b $bin_path --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar
+python encoder.py -i $video_path -q $q_index --height $video_height --width $video_width --frames $frame_to_encode --ip -1 --fast $fast_mode -b $bin_path --i_frame_model_path ./ckpt/cvpr2023_i_frame.pth.tar --p_frame_model_path ./ckpt/cvpr2025_p_frame.pth.tar
 ```
-- `$video_path`: input video path. For PNG files, it should be a directory.
-- `$q_index`: 0-63. Less value indicates lower quality.
-- `$fast`: 0/1. 1 indicates openning fast encoding mode.
-
+- `$video_path`: input video path | For PNG files, it should be a directory.
+- `$q_index`: 0-63 | Less value indicates lower quality.
+- `$frames`: N frames | Frames to be encoded. Default is set to -1 (all frames).
+- `$fast`: 0/1 | 1 indicates openning fast encoding mode.
+If `--fast 1` is used, only a 4x downsampled video will be encoded.
+**Decoding**
 ```shell
-python encoder.py -i /data/EsakaK/png_bmk/old_bt601/HEVC_D/RaceHorses_416x240_30 -q 43 --height 240 --width 416 -f 3 --fast 1 -b /output --i_frame_model_path /model/EsakaK/My_Model/DCVC-DC/cvpr_I_psnr.pth.tar --p_frame_model_path /data/Tombobo/DCVC_bo/model/BYF/Final/LBNVC_psnr_f6w0.1_f32w0.05_epo5.pth.tar
+python decoder.py -b $bin_path -o $rec_path --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar
 ```
-
-```shell
-python decoder.py -b /output -o /output/rec --i_frame_model_path /model/EsakaK/My_Model/DCVC-DC/cvpr_I_psnr.pth.tar --p_frame_model_path /data/Tombobo/DCVC_bo/model/BYF/Final/LBNVC_psnr_f6w0.1_f32w0.05_epo5.pth.tar
-```
+If it is a fast mode, you will only get a 4x downsampled video.
+If it is not a fast mode, you will get two video: 4x downsampled and full resolution.
 
 </details>
 
