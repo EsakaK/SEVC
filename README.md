@@ -169,7 +169,7 @@ If `--fast 1` is used, only a 4x downsampled video will be encoded.
 - 
 **Decoding**
 ```shell
-python decoder.py -b $bin_path -o $rec_path --i_frame_model_path ./ckpt/I_frame_model.pth.tar --p_frame_model_path ./ckpt/P_frame_model.pth.tar
+python decoder.py -b $bin_path -o $rec_path --i_frame_model_path ./ckpt/cvpr2023_i_frame.pth.tar --p_frame_model_path ./ckpt/cvpr2025_p_frame.pth.tar
 ```
 - If it is a fast mode, you will only get a 4x downsampled video.
 - If it is not a fast mode, you will get two videos: 4x downsampled and full resolution.
