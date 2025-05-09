@@ -3,7 +3,6 @@ import math
 import torch
 from torch import nn
 
-from .video_net import LowerBound
 from ..entropy_models.entropy_models import BitEstimator, GaussianEncoder, EntropyCoder
 from ..utils.stream_helper import get_padding_size
 
@@ -36,10 +35,10 @@ class CompressionModel(nn.Module):
         q_scale = q_scale[q_index]
         return q_basic * q_scale
 
-    @staticmethod
+     @staticmethod
     def probs_to_bits(probs):
         bits = -1.0 * torch.log(probs + 1e-5) / math.log(2.0)
-        bits = LowerBound.apply(bits, 0)
+        bits = torch.clamp_min(bits, 0)
         return bits
 
     def get_y_gaussian_bits(self, y, sigma):
