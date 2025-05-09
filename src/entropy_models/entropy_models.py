@@ -122,17 +122,6 @@ class BitEstimator(AEHelper, nn.Module):
     def get_cdf(self, x):
         return torch.sigmoid(self.get_logits_cdf(x))
 
-    def get_prob(self, x):
-        lower = self.get_logits_cdf(x - 0.5)
-        upper = self.get_logits_cdf(x + 0.5)
-        sign = -torch.sign(lower + upper)
-        sign = sign.detach()
-        prob = torch.abs(
-            torch.sigmoid(sign * upper) - torch.sigmoid(sign * lower)
-        )
-        prob = LowerBound.apply(prob, 1e-9)
-        return prob
-
     def update(self, force=False, entropy_coder=None):
         if entropy_coder is not None:
             self.entropy_coder = entropy_coder
