@@ -4,7 +4,7 @@
 
 Yifan Bian, Chuanbo Tang, Li Li, Dong Liu
 
-[[`Arxiv`]()] [[`BibTeX`](#book-citation)] [[`Dataset`](https://github.com/EsakaK/USTC-TD)] 
+[[`Arxiv`](https://arxiv.org/abs/2505.05309)] [[`BibTeX`](#book-citation)] [[`Dataset`](https://github.com/EsakaK/USTC-TD)] 
 
 [![python](https://img.shields.io/badge/Python-3.8-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-380/) [![pytorch](https://img.shields.io/badge/PyTorch-1.12-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/) [![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](#license)
 
