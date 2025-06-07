@@ -196,12 +196,13 @@ They are stored in rgb24 format. You can use the [YUV Player](https://github.com
 **If this repo helped you, a ⭐ star or citation would make my day!**
 
 ```bibtex
-@inproceedings{bian2025augmented,
-  title={{Augmented Deep Contexts for Spatially Embedded Video Coding}},
-  author={Bian, Yifan and Tang, Chuanbo and Li, Li and Liu, Dong},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  pages={xxx},
-  year={2025}
+@InProceedings{Bian_2025_CVPR,
+    author    = {Bian, Yifan and Tang, Chuanbo and Li, Li and Liu, Dong},
+    title     = {Augmented Deep Contexts for Spatially Embedded Video Coding},
+    booktitle = {Proceedings of the Computer Vision and Pattern Recognition Conference (CVPR)},
+    month     = {June},
+    year      = {2025},
+    pages     = {2094-2104}
 }
 ```
 
